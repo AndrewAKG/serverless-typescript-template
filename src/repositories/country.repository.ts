@@ -1,4 +1,6 @@
-import Repository from "./repository";
+import { Injector } from '@sailplane/injector';
+
+import Repository from './repository';
 
 /**
  * The schema definition. In other word,
@@ -17,6 +19,7 @@ export interface CountryDocument {
  */
 export default class CountryRepository extends Repository<CountryDocument> {
   constructor() {
-    super(process.env.COUNTRIES_TABLE || "countries-dev"); // Passing table name
+    super(process.env.COUNTRIES_TABLE || 'countries-dev'); // Passing table name
   }
 }
+Injector.register(CountryRepository);

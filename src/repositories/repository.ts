@@ -1,5 +1,5 @@
-import AWS from "aws-sdk";
-import { GetItemOutput, PutItemOutput } from "aws-sdk/clients/dynamodb";
+import AWS from 'aws-sdk';
+import { GetItemOutput, PutItemOutput } from 'aws-sdk/clients/dynamodb';
 
 /**
  * Base repository interface.
@@ -37,14 +37,11 @@ export default class Repository<T> implements IRepository<T> {
     let params = {
       TableName: this.table,
       Key: {
-        id
+        name: id
       }
     };
     try {
       const response = await this.documentClient.get(params).promise();
-      if (!response.Item) {
-        throw new Error("Item With this ID doesn't exist");
-      }
       return response;
     } catch (e) {
       throw e;
