@@ -1,0 +1,11 @@
+CountriesTableGET:
+  Effect: "Allow"
+  Action:
+    - dynamodb:GetItem
+  Resource: ${self:custom.countriesTable.arn}
+
+CountriesTablePOST:
+  Effect: "Allow"
+  Action:
+    - dynamodb:PutItem
+  Resource: ${self:custom.countriesTable.arn}

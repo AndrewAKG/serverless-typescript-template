@@ -1,0 +1,49 @@
+service: countries-rest-api
+
+plugins:
+  - serverless-iam-roles-per-function
+  - serverless-webpack
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage}
+  region: ${opt:region}
+  lambdaHashingVersion: 20201221
+  environment:
+    COUNTRIES_TABLE: ${self:custom.countriesTable.name}
+  apiGateway:
+    shouldStartNameWithService: true
+
+custom:
+  webpack:
+    excludeFiles:
+      - "src/**/*.test.ts"
+      - "src/**/__mocks__/*.ts"
+  countriesTable:
+    arn: !GetAtt CountriesTable.Arn
+    name: !Ref CountriesTable
+
+functions:
+  getCountryByName:
+    handler: src/handlers/getCountryByName.handler
+    events:
+      - http:
+          path: /countries/{name}
+          method: get
+          cors: true
+    iamRoleStatements:
+      - ${file(./iam/CountriesTableIAM.yml):CountriesTableGET}
+  createCountry:
+    handler: src/handlers/createCountry.handler
+    events:
+      - http:
+          path: /countries
+          method: post
+          cors: true
+    iamRoleStatements:
+      - ${file(./iam/CountriesTableIAM.yml):CountriesTablePOST}
+
+resources:
+  Resources:
+    CountriesTable: ${file(./resources/CountriesTable.yml):CountriesTable}
