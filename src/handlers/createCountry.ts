@@ -36,15 +36,13 @@ export const handler = LambdaUtils.wrapApiHandler(
       );
     }
 
-    try {
-      // validate country doesn't exist before
-      const countryDetails = await countryService.getCountryById(name);
-      if (countryDetails) {
-        throw new createError.Forbidden(
-          'Country with same name already exists!'
-        );
-      }
+    // validate country doesn't exist before
+    const countryDetails = await countryService.getCountryById(name);
+    if (countryDetails) {
+      throw new createError.Forbidden('Country with same name already exists!');
+    }
 
+    try {
       await countryService.createCountry(country);
       return {
         statusCode: 200,
@@ -54,7 +52,6 @@ export const handler = LambdaUtils.wrapApiHandler(
         })
       };
     } catch (e) {
-      console.log('INTENRAL ERROR', e);
       throw new createError.InternalServerError(
         'Server under maintenance! try again later!'
       );

@@ -23,9 +23,7 @@ export const handler = LambdaUtils.wrapApiHandler(
       const countryDetails = await countryService.getCountryById(countryName);
 
       if (!countryDetails) {
-        throw new createError.NotFound(
-          'Country with this name does not exist!'
-        );
+        throw new Error('NotFound');
       }
 
       return {
@@ -36,7 +34,12 @@ export const handler = LambdaUtils.wrapApiHandler(
         })
       };
     } catch (e) {
-      console.log('INTENRAL ERROR', e);
+      if (e.message === 'NotFound') {
+        throw new createError.NotFound(
+          'Country with this name does not exist!'
+        );
+      }
+
       throw new createError.InternalServerError(
         'Server under maintenance! try again later!'
       );
