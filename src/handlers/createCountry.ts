@@ -8,14 +8,14 @@ import 'source-map-support/register';
 import * as LambdaUtils from '@sailplane/lambda-utils';
 import * as createError from 'http-errors';
 import CountryService from '../services/country.service';
-import { CountryCreateDTO } from '../dto/country.dto';
+import { CreateCountryParams } from '../types/country.types';
 
 const countryService = new CountryService();
 
 /** AWS Lambda entrypoint */
 export const handler = LambdaUtils.wrapApiHandler(
   async (event: LambdaUtils.APIGatewayProxyEvent) => {
-    const country: CountryCreateDTO = event.body;
+    const country: CreateCountryParams = event.body;
     const { name, numberOfStates, population } = country;
 
     // validate missing inputs

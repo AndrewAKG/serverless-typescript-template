@@ -1,6 +1,6 @@
 import { Injector } from '@sailplane/injector';
 
-import Repository from './repository';
+import Repository from './repo';
 
 /**
  * The schema definition. In other word,

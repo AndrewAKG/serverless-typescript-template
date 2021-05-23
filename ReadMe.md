@@ -1,4 +1,4 @@
-# Example Serverless Rest Api with TypeScript
+# Example Serverless Rest Api with TypeScript and Custom Lambda Authorizer
 
 ## Usage
 
@@ -13,5 +13,7 @@
 
 ## Current EndPoints
 
-- GET - https://czcptb0qoi.execute-api.eu-west-3.amazonaws.com/dev/countries/{name}
-- POST - https://czcptb0qoi.execute-api.eu-west-3.amazonaws.com/dev/countries
+- POST - /register
+- POST - /login
+- GET - /countries/{name}
+- POST - /countries

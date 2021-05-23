@@ -12,17 +12,9 @@ provider:
   lambdaHashingVersion: 20201221
   environment:
     COUNTRIES_TABLE: ${self:custom.countriesTable.name}
+    USERS_TABLE: ${self:custom.usersTable.name}
   apiGateway:
     shouldStartNameWithService: true
-
-custom:
-  webpack:
-    excludeFiles:
-      - "src/**/*.test.ts"
-      - "src/**/__mocks__/*.ts"
-  countriesTable:
-    arn: !GetAtt CountriesTable.Arn
-    name: !Ref CountriesTable
 
 functions:
   getCountryByName:
@@ -44,7 +36,39 @@ functions:
     iamRoleStatements:
       - ${file(./iam/CountriesTableIAM.yml):CountriesTableGET}
       - ${file(./iam/CountriesTableIAM.yml):CountriesTablePOST}
+  register:
+    handler: src/handlers/registerUser.handler
+    events:
+      - http:
+          path: /register
+          method: post
+          cors: true
+    iamRoleStatements:
+      - ${file(./iam/UsersTableIAM.yml):UsersTableGET}
+      - ${file(./iam/UsersTableIAM.yml):UsersTablePOST}
+  login:
+    handler: src/handlers/login.handler
+    events:
+      - http:
+          path: /login
+          method: post
+          cors: true
+    iamRoleStatements:
+      - ${file(./iam/UsersTableIAM.yml):UsersTableGET}
 
 resources:
   Resources:
     CountriesTable: ${file(./resources/CountriesTable.yml):CountriesTable}
+    UsersTable: ${file(./resources/UsersTable.yml):UsersTable}
+
+custom:
+  webpack:
+    excludeFiles:
+      - "src/**/*.test.ts"
+      - "src/**/__mocks__/*.ts"
+  countriesTable:
+    arn: !GetAtt CountriesTable.Arn
+    name: !Ref CountriesTable
+  usersTable:
+    arn: !GetAtt UsersTable.Arn
+    name: !Ref UsersTable

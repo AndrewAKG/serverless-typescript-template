@@ -1,15 +1,15 @@
 import { Injector } from '@sailplane/injector';
 
-import { CountryCreateDTO } from '../dto/country.dto';
+import { CreateCountryParams } from '../types/country.types';
 import CountryRepository, {
   CountryDocument
-} from '../repositories/country.repository';
+} from '../repositories/country.repo';
 
 /**
  * Interface for CountryService
  */
 export interface ICountryService {
-  createCountry(data: CountryCreateDTO): Promise<void>;
+  createCountry(data: CreateCountryParams): Promise<void>;
   getCountryById(id: string): Promise<CountryDocument>;
 }
 
@@ -22,7 +22,7 @@ export default class CountryService implements ICountryService {
     CountryRepository
   )!;
 
-  public async createCountry(data: CountryCreateDTO): Promise<void> {
+  public async createCountry(data: CreateCountryParams): Promise<void> {
     try {
       await this.countryRepository.create(data);
     } catch (e) {
