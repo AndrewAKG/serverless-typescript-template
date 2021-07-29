@@ -1,0 +1,11 @@
+ExampleTableGET:
+  Effect: "Allow"
+  Action:
+    - dynamodb:GetItem
+  Resource: "*"
+
+ExampleTablePOST:
+  Effect: "Allow"
+  Action:
+    - dynamodb:PutItem
+  Resource: "*"

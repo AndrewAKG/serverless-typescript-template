@@ -1,4 +1,4 @@
-service: countries-rest-api
+service: serverless-typescript-template
 
 plugins:
   - serverless-iam-roles-per-function
@@ -6,69 +6,30 @@ plugins:
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs14.x
   stage: ${opt:stage}
   region: ${opt:region}
   lambdaHashingVersion: 20201221
-  environment:
-    COUNTRIES_TABLE: ${self:custom.countriesTable.name}
-    USERS_TABLE: ${self:custom.usersTable.name}
   apiGateway:
     shouldStartNameWithService: true
 
 functions:
-  getCountryByName:
-    handler: src/handlers/getCountryByName.handler
+  getExampleTable:
+    handler: src/handlers/getTable.handler
     events:
       - http:
-          path: /countries/{name}
+          path: /table
           method: get
           cors: true
     iamRoleStatements:
-      - ${file(./iam/CountriesTableIAM.yml):CountriesTableGET}
-  createCountry:
-    handler: src/handlers/createCountry.handler
-    events:
-      - http:
-          path: /countries
-          method: post
-          cors: true
-    iamRoleStatements:
-      - ${file(./iam/CountriesTableIAM.yml):CountriesTableGET}
-      - ${file(./iam/CountriesTableIAM.yml):CountriesTablePOST}
-  register:
-    handler: src/handlers/registerUser.handler
-    events:
-      - http:
-          path: /register
-          method: post
-          cors: true
-    iamRoleStatements:
-      - ${file(./iam/UsersTableIAM.yml):UsersTableGET}
-      - ${file(./iam/UsersTableIAM.yml):UsersTablePOST}
-  login:
-    handler: src/handlers/login.handler
-    events:
-      - http:
-          path: /login
-          method: post
-          cors: true
-    iamRoleStatements:
-      - ${file(./iam/UsersTableIAM.yml):UsersTableGET}
+      - ${file(./iam/ExampleTableIAM.yml):ExampleTableGET}
 
 resources:
   Resources:
-    CountriesTable: ${file(./resources/CountriesTable.yml):CountriesTable}
-    UsersTable: ${file(./resources/UsersTable.yml):UsersTable}
+    ExampleTable: ${file(./resources/ExampleTable.yml):ExampleTable}
 
 custom:
   webpack:
     excludeFiles:
       - "src/**/*.test.ts"
       - "src/**/__mocks__/*.ts"
-  countriesTable:
-    arn: !GetAtt CountriesTable.Arn
-    name: !Ref CountriesTable
-  usersTable:
-    arn: !GetAtt UsersTable.Arn
-    name: !Ref UsersTable
